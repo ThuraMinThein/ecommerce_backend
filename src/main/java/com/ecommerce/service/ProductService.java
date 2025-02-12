@@ -1,6 +1,7 @@
 package com.ecommerce.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,8 +24,9 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Product getProductById(int id) {
-        return productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
+    public Optional<Product> getProductById(int id) {
+        return productRepository.findById(id);
+        // return productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
     }
 
     public Product updateProduct(Product product) {
@@ -33,7 +35,7 @@ public class ProductService {
     }
 
     public Product deleteProduct(int id) {
-        Product product = this.getProductById(id);
+        Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
         productRepository.delete(product);
         return product;
     }
