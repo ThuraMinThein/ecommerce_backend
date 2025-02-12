@@ -19,7 +19,7 @@ public class ProductService {
         return newProduct;
     }
 
-    public List<Product> getAllProducts(String search) {
+    public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
 
@@ -27,11 +27,9 @@ public class ProductService {
         return productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
     }
 
-    public Product updateProduct(int id, Product product) {
-        Product getProduct = this.getProductById(id);
-        productRepository.save(product);
-
-        return getProduct;
+    public Product updateProduct(Product product) {
+        this.productRepository.findById(product.getId()).orElseThrow(() -> new RuntimeException("Product not found"));
+        return productRepository.save(product);
     }
 
     public Product deleteProduct(int id) {

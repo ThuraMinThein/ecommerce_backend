@@ -11,9 +11,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
@@ -31,23 +31,22 @@ public class ProductController {
 
     @GetMapping()
     public List<Product> getAllProducts(
-        @RequestParam("search") String search
         ) {
-        return productService.getAllProducts(search);
+        return productService.getAllProducts();
     }
 
     @GetMapping("/{id}")
-    public Product getProductById(@RequestParam int id) {
+    public Product getProductById(@PathVariable int id) {
         return productService.getProductById(id);
     }
     
-    @PatchMapping("/{id}")
-    public Product updateProduct(@RequestParam int id, @RequestBody Product product) {
-        return productService.updateProduct(id, product);
+    @PutMapping()
+    public Product updateProduct(@RequestBody Product product) {
+        return productService.updateProduct(product);
     }
 
     @DeleteMapping("/{id}")
-    public Product deleteProduct(@RequestParam int id) {
+    public Product deleteProduct(@PathVariable int id) {
         return productService.deleteProduct(id);
     }
 
