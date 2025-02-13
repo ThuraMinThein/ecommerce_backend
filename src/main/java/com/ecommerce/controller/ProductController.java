@@ -1,6 +1,7 @@
 package com.ecommerce.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ecommerce.model.Product;
@@ -36,8 +37,8 @@ public class ProductController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<Product>> getAllProducts() {
-        List<Product> products = productService.getAllProducts();
+    public ResponseEntity<List<Product>> getAllProducts(@RequestParam(required = false) String search) {
+        List<Product> products = productService.getAllProducts(search);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 

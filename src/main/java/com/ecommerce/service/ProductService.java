@@ -20,7 +20,9 @@ public class ProductService {
         return newProduct;
     }
 
-    public List<Product> getAllProducts() {
+    public List<Product> getAllProducts(String search) {
+        if(search != null && !search.isEmpty())
+            return productRepository.searchProducts(search);
         return productRepository.findAll();
     }
 
