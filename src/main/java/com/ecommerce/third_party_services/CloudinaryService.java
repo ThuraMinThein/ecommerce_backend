@@ -1,8 +1,6 @@
 package com.ecommerce.third_party_services;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,11 +18,11 @@ public class CloudinaryService {
 
     @Autowired
     private Cloudinary cloudinary;
-
+    
+    @SuppressWarnings("rawtypes")
     public String uploadImage(MultipartFile image, String folderName) {
         try {
-            File uploadedFile = convertMultiPartToFile(image);
-            var uploadImage = cloudinary.uploader().upload(uploadedFile, ObjectUtils.asMap("folder", folderName));
+            Map uploadImage = cloudinary.uploader().upload(image.getBytes(), ObjectUtils.asMap("folder", folderName));
 
             return uploadImage.get("url").toString();
         } catch (Exception e) {
@@ -43,14 +41,6 @@ public class CloudinaryService {
 
 
     //utils
-    private File convertMultiPartToFile(MultipartFile file) throws IOException {
-        File convertedFile = new File(file.getOriginalFilename());
-        FileOutputStream fos = new FileOutputStream(convertedFile);
-        fos.write(file.getBytes());
-        fos.close();
-    return convertedFile;
-    }
-
     private static final Pattern CLOUDINARY_URL_PATTERN = Pattern.compile(
         "/v\\d+/(.+?)\\.(?:jpg|jpeg|jpe|gif|png|bmp|svg|webp|mp4|webm|mov|ogv|flv|m3u8|ts)"
     );
