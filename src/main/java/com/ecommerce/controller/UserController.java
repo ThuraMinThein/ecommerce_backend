@@ -24,9 +24,14 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping()
+    @PostMapping("/sign-up")
     public UserDto createUser(@RequestBody User user) {
         return userService.createUser(user);
+    }
+
+    @PostMapping("/login")
+    public String login(@RequestBody User user) {
+        return userService.verify(user);
     }
 
     @GetMapping()

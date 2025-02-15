@@ -3,10 +3,14 @@ package com.ecommerce.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ecommerce.dto.UserDto;
+import com.ecommerce.helper.JWTService;
 import com.ecommerce.model.User;
 import com.ecommerce.repository.UserRepository;
 
@@ -16,6 +20,12 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private JWTService jwtService;
+    
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
     public UserDto createUser(User user) {
@@ -23,6 +33,13 @@ public class UserService {
         User newUser =  userRepository.save(user);
 
         return convertEntityToDto(newUser);
+    }
+
+    public String verify(User user) {
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+        if(!authentication.isAuthenticated())
+            return "Invalid Credentials";
+        return jwtService.generateToken(user.getUsername());
     }
 
     public List<UserDto> findAll(String search, String role) {
