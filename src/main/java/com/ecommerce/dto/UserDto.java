@@ -8,5 +8,6 @@ public class UserDto {
     private int id;
     private String username;
     private String role;
+    private String token;
 
 }

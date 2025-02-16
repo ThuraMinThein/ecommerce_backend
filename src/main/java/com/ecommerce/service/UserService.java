@@ -32,14 +32,20 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         User newUser =  userRepository.save(user);
 
-        return convertEntityToDto(newUser);
+        String token = jwtService.generateToken(user.getUsername());
+        return convertEntityToDto(newUser, token);
     }
 
-    public String verify(User user) {
+    public UserDto verify(User user) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
         if(!authentication.isAuthenticated())
-            return "Invalid Credentials";
-        return jwtService.generateToken(user.getUsername());
+            throw new RuntimeException("Invalid credentials");
+
+        User getUser = userRepository.findByUsername(user.getUsername());
+
+        String token = jwtService.generateToken(user.getUsername());
+        
+        return convertEntityToDto(getUser, token);
     }
 
     public List<UserDto> findAll(String search, String role) {
@@ -62,6 +68,15 @@ public class UserService {
         userDto.setId(user.getId());
         userDto.setUsername(user.getUsername());
         userDto.setRole(user.getRole());
+        return userDto;
+    }
+
+    private UserDto convertEntityToDto(User user, String token) {
+        UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
+        userDto.setUsername(user.getUsername());
+        userDto.setRole(user.getRole());
+        userDto.setToken(token);
         return userDto;
     }
 
