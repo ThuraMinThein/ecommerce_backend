@@ -28,7 +28,19 @@ public class UserService {
 
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
+    
+    public String seedAdmin() {
+        User user = new User();
+        user.setUsername("admin");
+        user.setPassword(passwordEncoder.encode("admin"));
+        user.setEmail("admin@gmail.com");
+        user.setRole("ROLE_ADMIN");
+        userRepository.save(user);
+        return "Admin created";
+    }
+
     public UserDto createUser(User user) {
+        user.setRole("ROLE_USER");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         User newUser =  userRepository.save(user);
 
