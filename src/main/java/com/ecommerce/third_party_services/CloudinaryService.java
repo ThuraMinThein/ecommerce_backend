@@ -21,6 +21,9 @@ public class CloudinaryService {
     
     @SuppressWarnings("rawtypes")
     public String uploadImage(MultipartFile image, String folderName) {
+        if(image == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Image is required");
+        }
         try {
             Map uploadImage = cloudinary.uploader().upload(image.getBytes(), ObjectUtils.asMap("folder", folderName));
 
@@ -31,6 +34,9 @@ public class CloudinaryService {
     }
 
     public void deleteImage(String imageUrl) {
+        if(imageUrl == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Image is required");
+        }
         try {
             String publicId = extractPublicIdFromUrl(imageUrl);
             cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());

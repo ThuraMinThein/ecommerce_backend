@@ -3,6 +3,7 @@ package com.ecommerce.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -17,6 +18,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.ecommerce.filters.JwtFilter;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableWebSecurity
@@ -36,9 +39,15 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                     .requestMatchers("users/sign-up","users/login", "admins/seed")
                     .permitAll()
-                    .requestMatchers("/admin/**").hasRole("ADMIN")
-                    .requestMatchers("/products").hasRole("ADMIN")
+                    .requestMatchers("/admins/**").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.POST,"/products").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.PUT,"/products/{id}").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.DELETE,"/products/{id}").hasRole("ADMIN")
                     .anyRequest().authenticated())
+                .exceptionHandling(exception -> exception
+                .accessDeniedHandler((request, response, accessDeniedException) -> {
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                }))
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
