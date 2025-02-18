@@ -20,7 +20,7 @@ The `ecommerce_backend` is a Spring Boot-based REST API that powers an eCommerce
 
 ### Prerequisites
 Ensure you have the following installed:
-- Java 17 or later
+- Java 21
 - Maven
 - PostgreSQL
 
@@ -37,6 +37,14 @@ spring.datasource.url=jdbc:postgresql://localhost:5432/ecommerce_db
 spring.datasource.username=your_username
 spring.datasource.password=your_password
 spring.jpa.hibernate.ddl-auto=update
+```
+
+### ENV File
+Create a `.env` file  with the following content:
+```properties
+CLOUDINARY_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
 ```
 
 ### Build & Run
