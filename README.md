@@ -40,7 +40,8 @@ spring.jpa.hibernate.ddl-auto=update
 ```
 
 ### ENV File
-Create a `.env` file  with the following content:
+Create a `.env` file  with the following content
+You can reference from `.env.example`
 ```properties
 CLOUDINARY_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
